@@ -1,0 +1,118 @@
+import type { Task, AgentStep } from '../types';
+
+export const inspectionSteps: AgentStep[] = [
+  { id: 's1', type: 'plan', label: 'PLAN', detail: 'Read report and identify findings', status: 'pending' },
+  { id: 's2', type: 'call_tool', label: 'CALL TOOL', detail: 'Local OCR — inspection_report.pdf', status: 'pending' },
+  { id: 's3', type: 'observe', label: 'OBSERVE', detail: 'Extracted 7 inspection findings', status: 'pending' },
+  { id: 's4', type: 'call_tool', label: 'CALL TOOL', detail: 'Knowledge Base Search — SOP library', status: 'pending' },
+  { id: 's5', type: 'observe', label: 'OBSERVE', detail: 'Matched SOP-204, SOP-117 references', status: 'pending' },
+  { id: 's6', type: 'iterate', label: 'ITERATE', detail: 'Refining approval note structure', status: 'pending' },
+  { id: 's7', type: 'verify', label: 'VERIFY', detail: 'Output checked against SOP-204', status: 'pending' },
+];
+
+export const codingSteps: AgentStep[] = [
+  { id: 'c1', type: 'plan', label: 'PLAN', detail: 'Analyze code, identify bugs', status: 'pending' },
+  { id: 'c2', type: 'call_tool', label: 'CALL TOOL', detail: 'Code analysis — fix_function.py', status: 'pending' },
+  { id: 'c3', type: 'observe', label: 'OBSERVE', detail: 'Found 2 bugs: null check, off-by-one', status: 'pending' },
+  { id: 'c4', type: 'iterate', label: 'ITERATE', detail: 'Generate corrected function', status: 'pending' },
+  { id: 'c5', type: 'call_tool', label: 'CALL TOOL', detail: 'Docker Sandbox — run tests (network disabled)', status: 'pending' },
+  { id: 'c6', type: 'observe', label: 'OBSERVE', detail: 'All 6 unit tests passed', status: 'pending' },
+  { id: 'c7', type: 'verify', label: 'VERIFY', detail: 'Code reviewed and verified', status: 'pending' },
+];
+
+export const visionSteps: AgentStep[] = [
+  { id: 'v1', type: 'plan', label: 'PLAN', detail: 'Parse P&ID diagram structure', status: 'pending' },
+  { id: 'v2', type: 'call_tool', label: 'CALL TOOL', detail: 'OCR + Vision — pid_scan.png', status: 'pending' },
+  { id: 'v3', type: 'observe', label: 'OBSERVE', detail: 'Detected 12 tags, 4 anomalies', status: 'pending' },
+  { id: 'v4', type: 'call_tool', label: 'CALL TOOL', detail: 'Knowledge Base — P&ID manual lookup', status: 'pending' },
+  { id: 'v5', type: 'observe', label: 'OBSERVE', detail: 'Matched 3 SOP references for valves', status: 'pending' },
+  { id: 'v6', type: 'verify', label: 'VERIFY', detail: 'Findings report generated', status: 'pending' },
+];
+
+export const demoTasks: Task[] = [
+  {
+    id: 'task-1',
+    name: 'Inspection Report',
+    type: 'document',
+    status: 'verified',
+    modelRoute: 'reasoning',
+    startedAt: '2026-09-24T14:32:00',
+    completedAt: '2026-09-24T14:33:42',
+    durationMs: 102000,
+    externalCalls: 0,
+    steps: inspectionSteps.map(s => ({ ...s, status: 'complete' as const })),
+    attachedFile: {
+      id: 'af-1',
+      name: 'inspection_report.pdf',
+      type: 'pdf',
+      pages: 14,
+      size: '2.4 MB',
+      status: 'scanned',
+      location: 'local',
+      classification: 'scanned',
+    },
+    output: {
+      id: 'out-1',
+      name: 'approval_note.docx',
+      type: 'docx',
+      status: 'verified',
+      location: 'local',
+    },
+  },
+  {
+    id: 'task-2',
+    name: 'Code Fix',
+    type: 'coding',
+    status: 'verified',
+    modelRoute: 'coding',
+    startedAt: '2026-09-24T14:35:10',
+    completedAt: '2026-09-24T14:35:48',
+    durationMs: 38000,
+    externalCalls: 0,
+    steps: codingSteps.map(s => ({ ...s, status: 'complete' as const })),
+    attachedFile: {
+      id: 'af-2',
+      name: 'fix_function.py',
+      type: 'py',
+      size: '4.2 KB',
+      status: 'ready',
+      location: 'local',
+      classification: 'uploaded',
+    },
+    output: {
+      id: 'out-2',
+      name: 'verified_code.zip',
+      type: 'zip',
+      status: 'verified',
+      location: 'local',
+    },
+  },
+  {
+    id: 'task-3',
+    name: 'P&ID Analysis',
+    type: 'vision',
+    status: 'complete',
+    modelRoute: 'vision',
+    startedAt: '2026-09-24T14:41:00',
+    completedAt: '2026-09-24T14:41:51',
+    durationMs: 51000,
+    externalCalls: 0,
+    steps: visionSteps.map(s => ({ ...s, status: 'complete' as const })),
+    attachedFile: {
+      id: 'af-3',
+      name: 'pid_scan.png',
+      type: 'png',
+      size: '3.1 MB',
+      status: 'scanned',
+      location: 'local',
+      classification: 'uploaded',
+    },
+    output: {
+      id: 'out-3',
+      name: 'pid_findings.docx',
+      type: 'docx',
+      status: 'ready',
+      location: 'local',
+    },
+  },
+];
